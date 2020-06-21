@@ -1,17 +1,20 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: carts-db
-  labels:
-    name: carts-db
   namespace: sock-shop
 spec:
+  selector:
+    matchLabels:
+      name: carts-db
   replicas: 1
   template:
     metadata:
       labels:
         name: carts-db
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: kind-worker2
       containers:
       - name: carts-db
         image: mongo
@@ -52,7 +55,7 @@ spec:
   selector:
     name: carts-db
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: carts
@@ -60,12 +63,17 @@ metadata:
     name: carts
   namespace: sock-shop
 spec:
+  selector:
+    matchLabels:
+      name: carts
   replicas: 1
   template:
     metadata:
       labels:
         name: carts
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: kind-worker2
       containers:
       - name: carts
         image: weaveworksdemos/carts:0.4.8
@@ -110,7 +118,7 @@ spec:
   selector:
     name: carts
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: catalogue-db
@@ -118,12 +126,17 @@ metadata:
     name: catalogue-db
   namespace: sock-shop
 spec:
+  selector:
+    matchLabels:
+      name: catalogue-db
   replicas: 1
   template:
     metadata:
       labels:
         name: catalogue-db
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: kind-worker2
       containers:
       - name: catalogue-db
         image: weaveworksdemos/catalogue-db:0.3.0
@@ -153,7 +166,7 @@ spec:
   selector:
     name: catalogue-db
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: catalogue
@@ -161,12 +174,17 @@ metadata:
     name: catalogue
   namespace: sock-shop
 spec:
+  selector:
+    matchLabels:
+      name: catalogue
   replicas: 1
   template:
     metadata:
       labels:
         name: catalogue
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: kind-worker2
       containers:
       - name: catalogue
         image: weaveworksdemos/catalogue:0.3.5
@@ -199,25 +217,26 @@ spec:
   selector:
     name: catalogue
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: front-end
   namespace: sock-shop
 spec:
+  selector:
+    matchLabels:
+      name: front-end
   replicas: 1
   template:
     metadata:
       labels:
         name: front-end
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: kind-worker
       containers:
       - name: front-end
         image: weaveworksdemos/front-end:0.3.12
-        resources:
-          requests:
-            cpu: 100m
-            memory: 100Mi
         ports:
         - containerPort: 8079
         securityContext:
@@ -246,7 +265,7 @@ spec:
   selector:
     name: front-end
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: orders-db
@@ -254,12 +273,17 @@ metadata:
     name: orders-db
   namespace: sock-shop
 spec:
+  selector:
+    matchLabels:
+      name: orders-db
   replicas: 1
   template:
     metadata:
       labels:
         name: orders-db
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: kind-worker3
       containers:
       - name: orders-db
         image: mongo
@@ -300,7 +324,7 @@ spec:
   selector:
     name: orders-db
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: orders
@@ -308,12 +332,17 @@ metadata:
     name: orders
   namespace: sock-shop
 spec:
+  selector:
+    matchLabels:
+      name: orders
   replicas: 1
   template:
     metadata:
       labels:
         name: orders
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: kind-worker3
       containers:
       - name: orders
         image: weaveworksdemos/orders:0.4.7
@@ -358,7 +387,7 @@ spec:
   selector:
     name: orders
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: payment
@@ -366,12 +395,17 @@ metadata:
     name: payment
   namespace: sock-shop
 spec:
+  selector:
+    matchLabels:
+      name: payment
   replicas: 1
   template:
     metadata:
       labels:
         name: payment
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: kind-worker2
       containers:
       - name: payment
         image: weaveworksdemos/payment:0.4.3
@@ -404,7 +438,7 @@ spec:
   selector:
     name: payment
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: queue-master
@@ -412,12 +446,17 @@ metadata:
     name: queue-master
   namespace: sock-shop
 spec:
+  selector:
+    matchLabels:
+      name: queue-master
   replicas: 1
   template:
     metadata:
       labels:
         name: queue-master
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: kind-worker
       containers:
       - name: queue-master
         image: weaveworksdemos/queue-master:0.3.1
@@ -443,7 +482,7 @@ spec:
   selector:
     name: queue-master
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: rabbitmq
@@ -451,12 +490,17 @@ metadata:
     name: rabbitmq
   namespace: sock-shop
 spec:
+  selector:
+    matchLabels:
+      name: rabbitmq
   replicas: 1
   template:
     metadata:
       labels:
         name: rabbitmq
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: kind-worker3
       containers:
       - name: rabbitmq
         image: rabbitmq:3.6.8
@@ -490,7 +534,7 @@ spec:
   selector:
     name: rabbitmq
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: shipping
@@ -498,12 +542,17 @@ metadata:
     name: shipping
   namespace: sock-shop
 spec:
+  selector:
+    matchLabels:
+      name: shipping
   replicas: 1
   template:
     metadata:
       labels:
         name: shipping
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: kind-worker
       containers:
       - name: shipping
         image: weaveworksdemos/shipping:0.4.8
@@ -548,7 +597,7 @@ spec:
   selector:
     name: shipping
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: user-db
@@ -556,12 +605,17 @@ metadata:
     name: user-db
   namespace: sock-shop
 spec:
+  selector:
+    matchLabels:
+      name: user-db
   replicas: 1
   template:
     metadata:
       labels:
         name: user-db
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: kind-worker3
       containers:
       - name: user-db
         image: weaveworksdemos/user-db:0.4.0
@@ -602,7 +656,7 @@ spec:
   selector:
     name: user-db
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: user
@@ -610,12 +664,17 @@ metadata:
     name: user
   namespace: sock-shop
 spec:
+  selector:
+    matchLabels:
+      name: user
   replicas: 1
   template:
     metadata:
       labels:
         name: user
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: kind-worker3
       containers:
       - name: user
         image: weaveworksdemos/user:0.4.7
